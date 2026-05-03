@@ -1,6 +1,7 @@
 # MySteamStats
 
 连接 Steam 账号，深度分析你的游戏人生。
+
 本项目主要使用Claude code + deepseek v4 pro完成，主要是为了体验一次完整vibe coding开发流程，顺便检测一下deepseek v4 的性能
 。
 
