@@ -4,6 +4,10 @@ import { syncGameLibrary } from "@/lib/steam";
 
 export const dynamic = "force-dynamic";
 
+export function GET() {
+  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+}
+
 export async function POST() {
   const session = await requireAuth();
 
