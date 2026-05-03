@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Text, Billboard } from "@react-three/drei";
-import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Text, Billboard, useTexture } from "@react-three/drei";
 
 interface Planet {
   id: string;
@@ -12,60 +10,28 @@ interface Planet {
   playtimeHours: number;
 }
 
-function CoverPlane({ url }: { url: string }) {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
-
-  useEffect(() => {
-    if (!url) return;
-    new THREE.TextureLoader().load(
-      url,
-      setTexture,
-      undefined,
-      () => {}
-    );
-  }, [url]);
-
-  if (!texture) {
-    return <meshBasicMaterial color="#1a1a2e" />;
-  }
-  return <meshBasicMaterial map={texture} />;
-}
-
 function PlanetMesh({
   planet,
-  angle,
+  theta,
+  phi,
   distance,
-  scale,
 }: {
   planet: Planet;
-  angle: number;
+  theta: number;
+  phi: number;
   distance: number;
-  scale: number;
 }) {
-  const x = Math.cos(angle) * distance;
-  const z = Math.sin(angle) * distance;
-  const y = (Math.random() - 0.5) * 2;
+  const x = distance * Math.sin(phi) * Math.cos(theta);
+  const y = distance * Math.cos(phi);
+  const z = distance * Math.sin(phi) * Math.sin(theta);
 
   return (
     <group position={[x, y, z]}>
       <Billboard>
-        <mesh>
-          <planeGeometry args={[scale, scale * 1.25]} />
-          <CoverPlane url={planet.coverUrl} />
-        </mesh>
+        <CoverMesh url={planet.coverUrl} />
         <Text
-          position={[0, -scale * 0.65, 0]}
-          fontSize={0.18}
-          color="white"
-          anchorX="center"
-          anchorY="top"
-          maxWidth={scale * 2}
-        >
-          {planet.name}
-        </Text>
-        <Text
-          position={[0, -scale * 0.85, 0]}
-          fontSize={0.14}
+          position={[0, -0.8, 0]}
+          fontSize={0.15}
           color="#1a9fff"
           anchorX="center"
           anchorY="top"
@@ -77,22 +43,39 @@ function PlanetMesh({
   );
 }
 
-function CenterSphere({ avatarUrl }: { avatarUrl: string }) {
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+function CoverMesh({ url }: { url: string }) {
+  let texture: any = null;
+  try {
+    texture = useTexture(url);
+  } catch {
+    // texture loading failed
+  }
+  return (
+    <mesh>
+      <planeGeometry args={[1, 1.25]} />
+      <meshBasicMaterial
+        map={texture}
+        color={texture ? "white" : "#1a1a2e"}
+      />
+    </mesh>
+  );
+}
 
-  useEffect(() => {
-    if (!avatarUrl) return;
-    new THREE.TextureLoader().load(avatarUrl, setTexture);
-  }, [avatarUrl]);
+function CenterSphere({ avatarUrl }: { avatarUrl: string }) {
+  let texture = null;
+  try {
+    texture = useTexture(avatarUrl || " ");
+  } catch {
+    // will use fallback color
+  }
 
   return (
     <mesh>
       <sphereGeometry args={[1, 32, 32]} />
-      {texture ? (
-        <meshBasicMaterial map={texture} />
-      ) : (
-        <meshBasicMaterial color="#1a9fff" />
-      )}
+      <meshBasicMaterial
+        map={texture}
+        color={texture ? "white" : "#1a9fff"}
+      />
       <pointLight intensity={2} color="#1a9fff" distance={20} />
     </mesh>
   );
@@ -117,17 +100,19 @@ function GalaxyScene({
           maxH === minH
             ? 0.5
             : (planet.playtimeHours - minH) / (maxH - minH);
-        const distance = 3 + (1 - t) * 10;
-        const scale = 0.4 + t * 1.6;
-        const angle = (i / planets.length) * Math.PI * 2;
+        const distance = 2 + (1 - t) * 5;
+
+        // Random spherical distribution
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
 
         return (
           <PlanetMesh
             key={planet.id}
             planet={planet}
-            angle={angle}
+            theta={theta}
+            phi={phi}
             distance={distance}
-            scale={scale}
           />
         );
       })}
