@@ -22,8 +22,14 @@ export async function callDeepSeek(prompt: string): Promise<string> {
     }),
   });
 
-  const json = await res.json();
-  return json.choices?.[0]?.message?.content ?? "";
+  const text = await res.text();
+  try {
+    const json = JSON.parse(text);
+    return json.choices?.[0]?.message?.content ?? "";
+  } catch {
+    console.error("DeepSeek API error, response:", text.substring(0, 500));
+    throw new Error(`DeepSeek API returned non-JSON (status ${res.status})`);
+  }
 }
 
 export function buildPersonalityPrompt(
