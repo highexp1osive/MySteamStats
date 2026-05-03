@@ -1,0 +1,60 @@
+<h2>星系视图替代方案</h2>
+<p class="subtitle">Three.js 太重且纹理加载不稳定，选一个更轻量的方向</p>
+
+<div class="options">
+  <div class="option" data-choice="css-orbits">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>纯 CSS 轨道环</h3>
+      <p>封面按时长分布在多层同心圆轨道上，CSS 动画旋转，原生 img 标签加载封面</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>零额外依赖，原生 img 加载稳定</li>
+          <li>CSS transform 性能好，动画流畅</li>
+          <li>页面体积几乎不增加</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>只能做 2D 平面环绕，无 3D 景深</li>
+          <li>封面会重叠，需要控制数量</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="d3-force">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>D3.js 力导向散点图</h3>
+      <p>封面作为节点，中心头像为引力源，自然散布不重叠</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>自动避让不重叠，适合大量封面</li>
+          <li>支持拖拽、悬停、缩放</li>
+          <li>原生 img 标签嵌入 SVG foreignObject</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>引入 D3.js（~50KB）</li>
+          <li>力导向布局需要计算时间</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="canvas-2d">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Canvas 2D 星空散射</h3>
+      <p>全 Canvas 绘制，封面以星球形态随机散布在暗色星空背景中</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>完全控制渲染，不依赖外部库</li>
+          <li>可以做粒子、光晕等特效</li>
+          <li>性能最好</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>Canvas 绘制图片也有跨域问题</li>
+          <li>DOM 事件绑定较繁琐</li>
+          <li>代码量最大</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>

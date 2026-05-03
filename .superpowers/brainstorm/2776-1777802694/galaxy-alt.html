@@ -1,0 +1,42 @@
+<h2>星系视图替代方案</h2>
+<p class="subtitle">Three.js 太重且纹理加载不稳定，选一个更轻量的方向</p>
+
+<div class="options">
+  <div class="option" data-choice="css-orbits">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>纯 CSS 轨道环</h3>
+      <p>封面按时长分布在多层同心圆轨道上，CSS 动画旋转，原生 img 标签加载封面</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>零额外依赖，原生 img 加载最稳定</li>
+          <li>CSS transform 性能好，动画流畅</li>
+          <li>页面体积几乎不增加</li>
+          <li>可直接复用 GameCard 组件</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>2D 平面环绕，无 3D 景深</li>
+          <li>封面多时会拥挤</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="d3-force">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>D3.js 力导向散点 + 中心引力</h3>
+      <p>封面作为节点散布，中心头像为引力源，力仿真自动避让不重叠</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>自动避让不重叠，适合大量封面</li>
+          <li>支持拖拽、悬停、缩放</li>
+          <li>封面用原生 img 标签（foreignObject）</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>引入 D3.js（~50KB）</li>
+          <li>首次布局需计算（1-2秒）</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>

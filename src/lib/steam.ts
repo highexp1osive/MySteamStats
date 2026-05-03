@@ -2,7 +2,7 @@ import { db } from "./db";
 import { fetchWithProxy } from "./fetch-with-proxy";
 
 function coverUrl(appId: number) {
-  return `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/library_600x900_2x.jpg`;
+  return `https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_600x900.jpg`;
 }
 
 function headerUrl(appId: number) {
