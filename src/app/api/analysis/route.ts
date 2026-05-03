@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAuth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { callDeepSeek, buildPersonalityPrompt, buildReviewStylePrompt } from "@/lib/deepseek";
 
 export const dynamic = "force-dynamic";
 
 export function GET() {
-  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+  return NextResponse.json({ status: "ok" });
 }
 
 export async function POST(request: NextRequest) {
+  const { requireAuth } = await import("@/lib/auth");
+  const { db } = await import("@/lib/db");
+  const { callDeepSeek, buildPersonalityPrompt, buildReviewStylePrompt } = await import("@/lib/deepseek");
+
   const session = await requireAuth();
   const { type, refresh }: { type: "personality" | "review_style"; refresh?: boolean } = await request.json();
 
-  // Check cache (skip if refresh)
   if (!refresh) {
     const cached = await db.aIAnalysis.findUnique({
       where: { userId_type: { userId: session.userId!, type } },
@@ -48,31 +48,25 @@ export async function POST(request: NextRequest) {
       include: { game: true },
     });
 
-    const reviewData = reviews.map((r) => ({
-      gameName: r.game.name,
-      content: r.content,
-      isRecommended: r.isRecommended,
-    }));
-
-    if (reviewData.length === 0) {
+    if (reviews.length === 0) {
       return NextResponse.json({
-        result: { text: "你还没有在 Steam 上写过任何评测。去 Steam 上写几条评测再来吧！" },
+        result: { text: "你还没有在 Steam 上写过任何评测。" },
         cached: false,
       });
     }
 
-    prompt = buildReviewStylePrompt(reviewData);
+    prompt = buildReviewStylePrompt(
+      reviews.map((r) => ({ gameName: r.game.name, content: r.content, isRecommended: r.isRecommended }))
+    );
   }
 
   try {
     const result = await callDeepSeek(prompt);
-
     await db.aIAnalysis.upsert({
       where: { userId_type: { userId: session.userId!, type } },
       update: { content: { text: result }, generatedAt: new Date() },
       create: { userId: session.userId!, type, content: { text: result } },
     });
-
     return NextResponse.json({ result: { text: result }, cached: false });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });

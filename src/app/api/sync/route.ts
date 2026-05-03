@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
-import { requireAuth } from "@/lib/auth";
-import { syncGameLibrary } from "@/lib/steam";
 
 export const dynamic = "force-dynamic";
 
 export function GET() {
-  return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
+  return NextResponse.json({ status: "ok" });
 }
 
 export async function POST() {
-  const session = await requireAuth();
+  const { requireAuth } = await import("@/lib/auth");
+  const { syncGameLibrary } = await import("@/lib/steam");
 
+  const session = await requireAuth();
   try {
     const gameCount = await syncGameLibrary(session.userId!, session.steamId!);
     return NextResponse.json({ success: true, gameCount });
