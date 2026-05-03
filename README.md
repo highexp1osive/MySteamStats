@@ -10,7 +10,7 @@
 
 
 
-[**在线体验**](https://my-steam-stats.vercel.app/) [经验总结](https://acngabohgjo8.feishu.cn/wiki/Zs0hwlKEkigfoAkeA12cGhagnTb)
+[**在线体验**](https://my-steam-stats.vercel.app/)   [**经验总结**](https://acngabohgjo8.feishu.cn/wiki/Zs0hwlKEkigfoAkeA12cGhagnTb)
 
 注意：因为需要登录steam，优先推荐使用本地部署，更安全。上线在线体验网站也主要是为了积累一些线上网页运维的经验，本人只支持上线一个月（5.3-6.3），不能保证对项目的长期维护，在上线期间如果发生任何错误欢迎指出，但是不能保证彻底的隐私安全。
 
