@@ -1,6 +1,8 @@
 # MySteamStats
 
 连接 Steam 账号，深度分析你的游戏人生。
+本项目主要使用Claude code + deepseek v4 pro完成，主要是为了体验一次完整vibe coding开发流程，顺便检测一下deepseek v4 的性能
+。
 
 ## 功能
 
@@ -17,7 +19,7 @@ Next.js 14 + TypeScript / PostgreSQL + Prisma / Tailwind CSS / Steam OpenID / De
 
 ---
 
-## 本地运行（不用 Vercel，在自己电脑上跑）
+## 本地运行
 
 ### 前提
 
