@@ -36,6 +36,7 @@ export default async function DashboardPage() {
     playtimeMinutes: ug.playtimeMinutes,
     playtime2Weeks: ug.playtime2Weeks,
     lastPlayedAt: ug.lastPlayedAt?.toISOString() ?? null,
+    completed: ug.completed,
   }));
 
   const allGenres = Array.from(
@@ -61,7 +62,14 @@ export default async function DashboardPage() {
         />
 
         {!hasData && <AutoSync />}
-        {hasData && <GameList games={games} allGenres={allGenres} />}
+        {hasData && (
+          <>
+            <p className="text-[#8ba3b8] text-xs mb-3">
+              悬停游戏卡片，点击右上角 ✓ 标记已通关。已通关的游戏将不会出现在推荐中。
+            </p>
+            <GameList games={games} allGenres={allGenres} />
+          </>
+        )}
       </div>
     </div>
   );

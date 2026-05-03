@@ -8,11 +8,5 @@ export interface GameWithPlaytime {
   playtimeMinutes: number;
   playtime2Weeks: number;
   lastPlayedAt: string | null;
-}
-
-export interface AIAnalysisResult {
-  personality?: string;
-  tags?: string[];
-  summary?: string;
-  recommendations?: { name: string; reason: string }[];
+  completed?: boolean;
 }

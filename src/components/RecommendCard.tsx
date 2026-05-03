@@ -22,7 +22,9 @@ export default function RecommendCard({ item, index }: { item: RecommendItem; in
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-[#171a21] truncate">{item.name}</h3>
-          <span className={`text-sm font-bold shrink-0 ${scoreColor}`}>{item.score}/10</span>
+          <span className={`text-sm font-bold shrink-0 ${scoreColor}`} title="AI 推荐评分：越高越值得玩">
+            {item.score}/10
+          </span>
           {!item.inLibrary && (
             <span className="text-xs bg-[#1a9fff]/10 text-[#1a9fff] px-2 py-0.5 rounded-full shrink-0">库外</span>
           )}

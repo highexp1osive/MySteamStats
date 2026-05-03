@@ -7,6 +7,7 @@ interface Cover {
   name: string;
   coverUrl: string;
   playtimeHours: number;
+  completed?: boolean;
 }
 
 interface GameBox {
@@ -121,7 +122,7 @@ export default function CoverMosaic({ covers }: { covers: Cover[] }) {
     const minH = 45;
     const maxH = 250;
     const boxes = filtered.map((g) => {
-      const ratio = Math.sqrt((g.playtimeHours * 60) / (maxPlaytime * 60));
+      const ratio = Math.sqrt(g.playtimeHours / maxPlaytime);
       const h = Math.round(minH + ratio * (maxH - minH));
       const w = Math.round(h * HEADER_ASPECT);
       return { game: g, w, h };
@@ -184,6 +185,12 @@ export default function CoverMosaic({ covers }: { covers: Cover[] }) {
       const img = imageMap.get(p.game.id);
       if (img) {
         ctx.drawImage(img, p.x, p.y, p.w, p.h);
+        // Green border for completed games
+        if (p.game.completed) {
+          ctx.strokeStyle = "#22c55e";
+          ctx.lineWidth = 3;
+          ctx.strokeRect(p.x + 1, p.y + 1, p.w - 2, p.h - 2);
+        }
       } else {
         ctx.fillStyle = "#1a1a24";
         ctx.fillRect(p.x, p.y, p.w, p.h);

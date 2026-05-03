@@ -19,6 +19,7 @@ export default async function GalaxyPage() {
     name: ug.game.name,
     coverUrl: ug.game.coverUrl,
     playtimeHours: Math.round(ug.playtimeMinutes / 60),
+    completed: ug.completed,
   }));
 
   return (

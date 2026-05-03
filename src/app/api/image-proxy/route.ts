@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchWithProxy } from "@/lib/fetch-with-proxy";
 
+export const dynamic = "force-dynamic";
+
 const ALLOWED_DOMAINS = [
   "media.steampowered.com",
   "steamcdn-a.akamaihd.net",
