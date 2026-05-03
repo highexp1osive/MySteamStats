@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 interface Cover {
   id: string;
@@ -9,187 +9,214 @@ interface Cover {
   playtimeHours: number;
 }
 
-interface LayoutItem {
-  cover: Cover;
-  x: number;
-  y: number;
+interface GameBox {
+  game: Cover;
   w: number;
   h: number;
+  x: number;
+  y: number;
 }
 
-function calcLayout(covers: Cover[], canvasSize: number): LayoutItem[] {
-  if (covers.length === 0) return [];
+const COVER_ASPECT = 600 / 900;
 
-  const maxH = Math.max(...covers.map((c) => c.playtimeHours), 1);
-  const minH = Math.min(...covers.map((c) => c.playtimeHours), 1);
+function rectsOverlap(a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }) {
+  return !(a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y);
+}
 
-  // Assign weight 1~4 based on playtime
-  const items = covers.map((c) => ({
-    cover: c,
-    weight:
-      maxH === minH
-        ? 2
-        : 1 + ((c.playtimeHours - minH) / (maxH - minH)) * 3,
-  }));
+function hasOverlap(box: { x: number; y: number; w: number; h: number }, placed: GameBox[]) {
+  for (const p of placed) {
+    if (rectsOverlap(box, { x: p.x, y: p.y, w: p.w, h: p.h })) return true;
+  }
+  return false;
+}
 
-  // Row-based packing: fill each row, scale to fit width exactly
-  const layout: LayoutItem[] = [];
-  let row: { cover: Cover; weight: number }[] = [];
-  let rowWeight = 0;
-  const targetRowWeight = 8; // total weight per row
+function spiralPlacement(boxes: { game: Cover; w: number; h: number }[], canvasSize: number): GameBox[] {
+  const placed: GameBox[] = [];
+  const cx = canvasSize / 2;
+  const cy = canvasSize / 2;
+  const step = 6;
 
-  for (const item of items) {
-    row.push(item);
-    rowWeight += item.weight;
-    if (rowWeight >= targetRowWeight || item === items[items.length - 1]) {
-      // Scale row to fill width
-      const scale = targetRowWeight / rowWeight;
-      let x = 0;
-      const rowItems: LayoutItem[] = [];
-      for (const r of row) {
-        const w = (r.weight / rowWeight) * canvasSize;
-        rowItems.push({ cover: r.cover, x, y: 0, w, h: 0 });
-        x += w;
+  for (const box of boxes) {
+    let bestPos: { x: number; y: number } | null = null;
+    let bestDist = Infinity;
+
+    // Try center first
+    const sx = cx - box.w / 2;
+    const sy = cy - box.h / 2;
+    if (!hasOverlap({ x: sx, y: sy, w: box.w, h: box.h }, placed)) {
+      bestPos = { x: sx, y: sy };
+      bestDist = 0;
+    } else {
+      for (let r = step; r < canvasSize && !bestPos; r += step) {
+        const numPoints = Math.max(8, Math.floor((2 * Math.PI * r) / step));
+        for (let i = 0; i < numPoints; i++) {
+          const angle = (2 * Math.PI * i) / numPoints;
+          const x = cx + Math.cos(angle) * r - box.w / 2;
+          const y = cy + Math.sin(angle) * r - box.h / 2;
+          if (x < 0 || y < 0 || x + box.w > canvasSize || y + box.h > canvasSize) continue;
+          if (!hasOverlap({ x, y, w: box.w, h: box.h }, placed)) {
+            const dist = Math.sqrt(Math.pow(x + box.w / 2 - cx, 2) + Math.pow(y + box.h / 2 - cy, 2));
+            if (dist < bestDist) { bestDist = dist; bestPos = { x, y }; }
+          }
+        }
+        if (bestPos) break;
       }
-      // Calculate row height based on aspect ratio (3:4)
-      const avgW = canvasSize / row.length;
-      const rowH = avgW * 1.25;
-      for (const ri of rowItems) {
-        ri.h = rowH;
-      }
-      layout.push(...rowItems);
-      row = [];
-      rowWeight = 0;
+    }
+
+    if (bestPos) {
+      placed.push({ game: box.game, w: box.w, h: box.h, x: bestPos.x, y: bestPos.y });
     }
   }
 
-  // Assign y positions
-  let y = 0;
-  let currentRow = 0;
-  let prevRowEnd = 0;
-  const rowGroups: LayoutItem[][] = [];
-  let currentGroup: LayoutItem[] = [];
-
-  for (const item of layout) {
-    if (item.x === 0 && currentGroup.length > 0) {
-      rowGroups.push(currentGroup);
-      currentGroup = [];
-    }
-    currentGroup.push(item);
-  }
-  if (currentGroup.length > 0) rowGroups.push(currentGroup);
-
-  const result: LayoutItem[] = [];
-  y = 0;
-  for (const group of rowGroups) {
-    const rowH = group[0].h;
-    for (const item of group) {
-      result.push({ ...item, y });
-    }
-    y += rowH;
-  }
-
-  return result;
+  return placed;
 }
 
 export default function CoverMosaic({ covers }: { covers: Cover[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const canvasSize = 2000;
+  const [generated, setGenerated] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [canvasStyle, setCanvasStyle] = useState({ width: "100%", height: "auto" as string });
 
-  const filtered = covers.filter((c) => c.playtimeHours > 0);
+  const filtered = covers
+    .filter((c) => c.playtimeHours > 0)
+    .sort((a, b) => b.playtimeHours - a.playtimeHours);
   const totalGames = filtered.length;
   const totalHours = filtered.reduce((s, c) => s + c.playtimeHours, 0);
 
   const generate = useCallback(async () => {
-    const canvas = document.createElement("canvas");
-    const layout = calcLayout(filtered, canvasSize);
+    if (filtered.length === 0 || loading) return;
+    setLoading(true);
+    setProgress(0);
 
-    // Calculate total height
-    const totalH =
-      layout.length > 0
-        ? Math.max(...layout.map((l) => l.y + l.h))
-        : canvasSize;
+    const maxH = filtered[0].playtimeHours;
+    const minSize = 90;
+    const maxSize = 240;
+    const canvasSize = 4000;
 
-    canvas.width = canvasSize;
-    canvas.height = Math.round(totalH);
-
-    const ctx = canvas.getContext("2d")!;
-
-    // Background
-    ctx.fillStyle = "#0a0a14";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Load and draw each cover
-    const loadImage = (url: string): Promise<HTMLImageElement> =>
-      new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = "anonymous";
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error(`Failed to load ${url}`));
-        img.src = url;
-      });
-
-    const drawPromises = layout.map(async (item) => {
-      try {
-        const img = await loadImage(item.cover.coverUrl);
-        const iw = img.naturalWidth;
-        const ih = img.naturalHeight;
-        const coverAspect = iw / ih;
-        const cellAspect = item.w / item.h;
-
-        let sw: number, sh: number, sx: number, sy: number;
-
-        if (coverAspect > cellAspect) {
-          // Image wider than cell — crop sides
-          sh = ih;
-          sw = ih * cellAspect;
-          sx = (iw - sw) / 2;
-          sy = 0;
-        } else {
-          // Image taller than cell — crop top/bottom
-          sw = iw;
-          sh = iw / cellAspect;
-          sx = 0;
-          sy = (ih - sh) / 2;
-        }
-
-        ctx.drawImage(
-          img,
-          sx, sy, sw, sh,
-          item.x, item.y, item.w, item.h
-        );
-      } catch {
-        // Draw placeholder for failed images
-        ctx.fillStyle = "#1a1a2e";
-        ctx.fillRect(item.x, item.y, item.w, item.h);
-      }
+    const boxes = filtered.map((g) => {
+      const ratio = Math.sqrt(g.playtimeHours / maxH);
+      const h = Math.round(minSize + ratio * (maxSize - minSize));
+      const w = Math.round(h * COVER_ASPECT);
+      return { game: g, w, h };
     });
 
-    await Promise.all(drawPromises);
+    const placed = spiralPlacement(boxes, canvasSize);
+    if (placed.length === 0) { setLoading(false); return; }
 
-    // Stats overlay — top right
-    const pad = 30;
-    ctx.fillStyle = "rgba(0,0,0,0.7)";
-    ctx.beginPath();
-    ctx.roundRect(canvas.width - 320, pad, 290, 80, 16);
-    ctx.fill();
+    // Calculate bounding box
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const p of placed) {
+      minX = Math.min(minX, p.x); minY = Math.min(minY, p.y);
+      maxX = Math.max(maxX, p.x + p.w); maxY = Math.max(maxY, p.y + p.h);
+    }
 
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 28px Inter, sans-serif";
+    const pad = 32;
+    const logicalW = maxX - minX + pad * 2;
+    const logicalH = maxY - minY + pad * 2;
+
+    const canvas = document.createElement("canvas");
+    const scale = 2;
+    canvas.width = logicalW * scale;
+    canvas.height = logicalH * scale;
+
+    const ctx = canvas.getContext("2d")!;
+    ctx.scale(scale, scale);
+    ctx.fillStyle = "#0a0a14";
+    ctx.fillRect(0, 0, logicalW, logicalH);
+
+    // Normalize positions
+    for (const p of placed) {
+      p.x = p.x - minX + pad;
+      p.y = p.y - minY + pad;
+    }
+
+    // Load images via proxy
+    const imageMap = new Map<string, HTMLImageElement>();
+    let loaded = 0;
+
+    for (const p of placed) {
+      const match = p.game.coverUrl.match(/\/apps\/(\d+)\//);
+      const appId = match ? match[1] : null;
+      const proxyUrl = appId
+        ? `/api/image-proxy?url=${encodeURIComponent(`https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${appId}/library_600x900.jpg`)}`
+        : null;
+
+      if (proxyUrl) {
+        try {
+          const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+            const image = new Image();
+            image.crossOrigin = "anonymous";
+            image.onload = () => resolve(image);
+            image.onerror = reject;
+            image.src = proxyUrl;
+          });
+          imageMap.set(p.game.id, img);
+        } catch { /* skip */ }
+      }
+      loaded++;
+      setProgress(Math.round((loaded / placed.length) * 100));
+    }
+
+    // Draw in reverse order (biggest on top)
+    for (let i = placed.length - 1; i >= 0; i--) {
+      const p = placed[i];
+      const img = imageMap.get(p.game.id);
+      if (img) {
+        ctx.drawImage(img, p.x, p.y, p.w, p.h);
+      } else {
+        ctx.fillStyle = "#1a1a2e";
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+      }
+    }
+
+    // Stats overlay top-right
+    const bx = logicalW - 360, by = pad, bw = 328, bh = 88, r = 18;
+    ctx.fillStyle = "rgba(10,10,20,0.85)";
+    ctx.beginPath(); ctx.moveTo(bx + r, by); ctx.lineTo(bx + bw - r, by);
+    ctx.quadraticCurveTo(bx + bw, by, bx + bw, by + r);
+    ctx.lineTo(bx + bw, by + bh - r);
+    ctx.quadraticCurveTo(bx + bw, by + bh, bx + bw - r, by + bh);
+    ctx.lineTo(bx + r, by + bh);
+    ctx.quadraticCurveTo(bx, by + bh, bx, by + bh - r);
+    ctx.lineTo(bx, by + r);
+    ctx.quadraticCurveTo(bx, by, bx + r, by);
+    ctx.closePath(); ctx.fill();
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold 30px system-ui, sans-serif";
     ctx.textAlign = "right";
-    ctx.fillText(`${totalGames} 款游戏`, canvas.width - pad - 10, pad + 40);
-
+    ctx.fillText(`${totalGames} 款游戏`, logicalW - pad - 12, by + 40);
     ctx.fillStyle = "#1a9fff";
-    ctx.font = "bold 22px Inter, sans-serif";
-    ctx.fillText(`${totalHours.toLocaleString()} 小时`, canvas.width - pad - 10, pad + 68);
+    ctx.font = "bold 22px system-ui, sans-serif";
+    ctx.fillText(`${totalHours.toLocaleString()} 小时`, logicalW - pad - 12, by + 70);
 
-    setImageUrl(canvas.toDataURL("image/png"));
-  }, [filtered, totalGames, totalHours]);
+    // Display in page
+    const canvasOut = canvasRef.current;
+    if (canvasOut) {
+      canvasOut.width = canvas.width;
+      canvasOut.height = canvas.height;
+      canvasOut.getContext("2d")!.drawImage(canvas, 0, 0);
+    }
+
+    const maxW = Math.min(960, logicalW);
+    setCanvasStyle({ width: `${maxW}px`, height: `${(maxW / logicalW) * logicalH}px` });
+    setGenerated(true);
+    setLoading(false);
+  }, [filtered, loading]);
 
   useEffect(() => {
-    if (filtered.length > 0) generate();
-  }, [generate, filtered.length]);
+    if (filtered.length > 0) { const t = setTimeout(() => generate(), 100); return () => clearTimeout(t); }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const download = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const a = document.createElement("a");
+    a.download = "mysteamstats-collage.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+  };
 
   return (
     <div>
@@ -197,28 +224,19 @@ export default function CoverMosaic({ covers }: { covers: Cover[] }) {
         <h2 className="text-lg font-bold text-[#171a21]">
           游戏星系 · {totalGames} 款 · {totalHours.toLocaleString()}h
         </h2>
-        {imageUrl && (
-          <a
-            href={imageUrl}
-            download="mysteamstats-collage.png"
-            className="bg-[#1a9fff] hover:bg-[#1789dd] text-white px-5 py-2 rounded-full text-sm font-medium transition"
-          >
+        {generated && (
+          <button onClick={download} className="bg-[#1a9fff] hover:bg-[#1789dd] text-white px-5 py-2 rounded-full text-sm font-medium transition">
             保存大图
-          </a>
+          </button>
         )}
       </div>
-
       <div className="flex justify-center">
-        {!imageUrl ? (
+        {!generated ? (
           <div className="text-center py-20 text-[#5f7d9a] text-sm">
-            生成中...
+            {loading ? `生成中... ${progress}%` : "准备生成..."}
           </div>
         ) : (
-          <img
-            src={imageUrl}
-            alt="游戏封面拼图"
-            className="max-w-full rounded-xl shadow-lg"
-          />
+          <canvas ref={canvasRef} style={canvasStyle} className="rounded-xl shadow-lg max-w-full" />
         )}
       </div>
     </div>
