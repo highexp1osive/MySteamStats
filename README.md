@@ -4,6 +4,12 @@
 
 本项目主要使用 Claude Code + DeepSeek V4 Pro 完成，旨在体验一次完整的 Vibe Coding 开发流程并测试 DeepSeek V4 的性能。
 
+[在线体验网站](https://my-steam-stats.vercel.app/)
+
+注意：因为需要登录steam，优先推荐使用本地部署，更安全。上线在线体验网站也主要是为了积累一些线上网页运维的经验，本人只支持维护一个月（5.3-6.3），不能保证对项目的长期维护。
+
+另外由于项目使用的是vercel的服务器，连接需要使用魔法。
+
 封面拼图算法和图片代理方案借鉴了 [pengx17/steam-stats](https://github.com/pengx17/steam-stats)，感谢作者的开源贡献。
 
 ## 功能
