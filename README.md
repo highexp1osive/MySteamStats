@@ -2,8 +2,9 @@
 
 连接 Steam 账号，深度分析你的游戏人生。
 
-本项目主要使用Claude code + deepseek v4 pro完成，主要是为了体验一次完整vibe coding开发流程，顺便检测一下deepseek v4 的性能
-。
+本项目主要使用 Claude Code + DeepSeek V4 Pro 完成，旨在体验一次完整的 Vibe Coding 开发流程并测试 DeepSeek V4 的性能。
+
+封面拼图算法和图片代理方案借鉴了 [pengx17/steam-stats](https://github.com/pengx17/steam-stats)，感谢作者的开源贡献。
 
 ## 功能
 
