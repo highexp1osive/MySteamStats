@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
 import { syncGameLibrary } from "@/lib/steam";
 
+export const dynamic = "force-dynamic";
+
 export async function POST() {
   const session = await requireAuth();
 

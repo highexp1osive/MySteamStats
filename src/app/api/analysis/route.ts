@@ -3,6 +3,8 @@ import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { callDeepSeek, buildPersonalityPrompt, buildReviewStylePrompt } from "@/lib/deepseek";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   const session = await requireAuth();
   const { type, refresh }: { type: "personality" | "review_style"; refresh?: boolean } = await request.json();
