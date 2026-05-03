@@ -2,11 +2,17 @@
 
 连接 Steam 账号，深度分析你的游戏人生。
 
-本项目主要使用 Claude Code + DeepSeek V4 Pro 完成，旨在体验一次完整的 Vibe Coding 开发流程并测试 DeepSeek V4 的性能。
+制作这个项目的初衷是，本人热衷于查看各种年度总结用户总结，作为游戏玩家也不满足只看steam官方的年度总结。半年前使用过[steam-stats](https://github.com/pengx17/steam-stats)的在线网站，觉得很不错，后来这个项目也停止线上的维护了。刚巧最近deepseek v4上线打折，想体验一下完全的vibe coding开发网站，积累一些相关经验。本项目也模仿了一些steam-stats项目的功能，后续也会继续开发一些新的功能。
 
-[在线体验网站](https://my-steam-stats.vercel.app/)
+第一次做这种项目，可能有不够规范的地方，还需要继续学习。
 
-注意：因为需要登录steam，优先推荐使用本地部署，更安全。上线在线体验网站也主要是为了积累一些线上网页运维的经验，本人只支持维护一个月（5.3-6.3），不能保证对项目的长期维护。
+本项目主要使用 Claude Code + DeepSeek V4 Pro 完成，体验了一次完整的 Vibe Coding 开发流程并测试 DeepSeek V4 的性能，总计耗时12小时。过程中记录了一些经验。
+
+
+
+[**在线体验**](https://my-steam-stats.vercel.app/) [经验总结](https://acngabohgjo8.feishu.cn/wiki/Zs0hwlKEkigfoAkeA12cGhagnTb)
+
+注意：因为需要登录steam，优先推荐使用本地部署，更安全。上线在线体验网站也主要是为了积累一些线上网页运维的经验，本人只支持上线一个月（5.3-6.3），不能保证对项目的长期维护，在上线期间如果发生任何错误欢迎指出，但是不能保证彻底的隐私安全。
 
 另外由于项目使用的是vercel的服务器，连接需要使用魔法。
 
