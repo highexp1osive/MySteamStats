@@ -9,13 +9,13 @@ export default function AnalysisPage() {
   const [data, setData] = useState<Record<string, string | null>>({});
   const [loading, setLoading] = useState(false);
 
-  const fetchAnalysis = async (type: string) => {
+  const fetchAnalysis = async (type: string, refresh = false) => {
     setLoading(true);
     try {
       const res = await fetch("/api/analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type }),
+        body: JSON.stringify({ type, refresh }),
       });
       const json = await res.json();
       setData((prev) => ({ ...prev, [type]: json.result?.text ?? null }));
@@ -26,7 +26,7 @@ export default function AnalysisPage() {
     }
   };
 
-  const handleRefresh = () => fetchAnalysis(tab);
+  const handleRefresh = () => fetchAnalysis(tab, true);
 
   return (
     <div className="max-w-3xl mx-auto">

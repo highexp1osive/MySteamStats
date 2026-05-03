@@ -5,16 +5,17 @@ import { callDeepSeek, buildPersonalityPrompt, buildReviewStylePrompt } from "@/
 
 export async function POST(request: NextRequest) {
   const session = await requireAuth();
-  const { type }: { type: "personality" | "review_style" } = await request.json();
+  const { type, refresh }: { type: "personality" | "review_style"; refresh?: boolean } = await request.json();
 
-  // Check cache (24h for personality, 7d for review)
-  const cached = await db.aIAnalysis.findUnique({
-    where: { userId_type: { userId: session.userId!, type } },
-  });
-
-  const maxAge = type === "personality" ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
-  if (cached && Date.now() - new Date(cached.generatedAt).getTime() < maxAge) {
-    return NextResponse.json({ result: cached.content, cached: true });
+  // Check cache (skip if refresh)
+  if (!refresh) {
+    const cached = await db.aIAnalysis.findUnique({
+      where: { userId_type: { userId: session.userId!, type } },
+    });
+    const maxAge = type === "personality" ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
+    if (cached && Date.now() - new Date(cached.generatedAt).getTime() < maxAge) {
+      return NextResponse.json({ result: cached.content, cached: true });
+    }
   }
 
   let prompt: string;
