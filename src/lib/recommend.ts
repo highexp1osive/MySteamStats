@@ -22,6 +22,13 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+// Exclude non-game tools from recommendations and analysis
+const NON_GAME_NAMES = ["wallpaper engine", "3dmark", "pc building simulator", "cpu-z", "gpu-z"];
+
+function isNonGameApp(name: string): boolean {
+  return NON_GAME_NAMES.some((n) => name.toLowerCase().includes(n));
+}
+
 async function getLibraryCandidates(userId: string, mode: Mode) {
   const all = await db.userGame.findMany({
     where: { userId, completed: false },
@@ -29,7 +36,9 @@ async function getLibraryCandidates(userId: string, mode: Mode) {
     orderBy: { playtimeMinutes: "desc" },
   });
 
-  const games = all.map((ug) => ({
+  const games = all
+    .filter((ug) => !isNonGameApp(ug.game.name))
+    .map((ug) => ({
     name: ug.game.name,
     steamAppId: ug.game.steamAppId,
     hours: Math.round(ug.playtimeMinutes / 60),

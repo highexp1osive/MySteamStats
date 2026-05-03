@@ -29,7 +29,15 @@ export async function callDeepSeek(prompt: string): Promise<string> {
 export function buildPersonalityPrompt(
   games: { name: string; hours: number; playtime2Weeks: number; lastPlayed: string | null; genres: string[] }[]
 ): string {
-  const data = games.slice(0, 50).map((g) => ({
+  // Exclude non-game apps (tools, benchmarks, etc.)
+  const isNonGame = (name: string, genres: string[]) => {
+    const nonGameNames = ["wallpaper engine", "3dmark", "pc building simulator", "cpu-z", "gpu-z"];
+    if (nonGameNames.some((n) => name.toLowerCase().includes(n)) && genres.length === 0) return true;
+    return false;
+  };
+  const gameList = games.filter((g) => !isNonGame(g.name, g.genres));
+
+  const data = gameList.map((g) => ({
     name: g.name,
     hours: g.hours,
     recently: g.playtime2Weeks > 0 ? `${g.playtime2Weeks}h` : "近期未玩",
@@ -37,7 +45,7 @@ export function buildPersonalityPrompt(
     genres: g.genres,
   }));
 
-  return `以下是一个Steam玩家的游戏库数据（按游玩时长排序，部分），请分析玩家的游戏偏好和性格特点。
+  return `以下是一个Steam玩家的完整游戏库数据（按游玩时长排序，共${gameList.length}款，已排除Wallpaper Engine等工具软件），请分析玩家的游戏偏好和性格特点。
 
 要求：
 1. 分析游戏类型偏好，指出他最爱的游戏类型

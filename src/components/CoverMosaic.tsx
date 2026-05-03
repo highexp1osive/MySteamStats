@@ -184,13 +184,33 @@ export default function CoverMosaic({ covers }: { covers: Cover[] }) {
       const p = placed[i];
       const img = imageMap.get(p.game.id);
       if (img) {
+        ctx.save();
+        // Clip to cover bounds so badge doesn't leak
+        ctx.beginPath();
+        ctx.rect(p.x, p.y, p.w, p.h);
+        ctx.clip();
         ctx.drawImage(img, p.x, p.y, p.w, p.h);
-        // Green border for completed games
+        // Completed: yellow border + corner badge inside the cover
         if (p.game.completed) {
           ctx.strokeStyle = "#22c55e";
-          ctx.lineWidth = 3;
-          ctx.strokeRect(p.x + 1, p.y + 1, p.w - 2, p.h - 2);
+          ctx.lineWidth = 4;
+          ctx.strokeRect(p.x + 2, p.y + 2, p.w - 4, p.h - 4);
+
+          const br = Math.max(5, p.w * 0.06);
+          const m = 6;
+          const bcx = p.x + p.w - br - m;
+          const bcy = p.y + p.h - br - m;
+          ctx.fillStyle = "#22c55e";
+          ctx.beginPath();
+          ctx.arc(bcx + br / 2, bcy + br / 2, br, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#0a0a0f";
+          ctx.font = `bold ${br * 1.1}px system-ui, sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("✓", bcx + br / 2, bcy + br / 2 + 0.5);
         }
+        ctx.restore();
       } else {
         ctx.fillStyle = "#1a1a24";
         ctx.fillRect(p.x, p.y, p.w, p.h);
