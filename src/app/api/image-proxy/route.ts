@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "URL required" }, { status: 400 });
   }
 
-  const hostname = new URL(url).hostname;
+  let hostname: string;
+  try { hostname = new URL(url).hostname; } catch { return NextResponse.json({ error: "Invalid URL" }, { status: 400 }); }
   if (!ALLOWED_DOMAINS.some((d) => hostname.endsWith(d))) {
     return NextResponse.json({ error: "Domain not allowed" }, { status: 403 });
   }

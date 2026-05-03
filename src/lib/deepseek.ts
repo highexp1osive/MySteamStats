@@ -1,5 +1,11 @@
 const BASE_URL = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com";
 
+export const NON_GAME_NAMES = ["wallpaper engine", "3dmark", "pc building simulator", "cpu-z", "gpu-z"];
+
+export function isNonGameApp(name: string): boolean {
+  return NON_GAME_NAMES.some((n) => name.toLowerCase().includes(n));
+}
+
 export async function callDeepSeek(prompt: string): Promise<string> {
   const res = await fetch(`${BASE_URL}/chat/completions`, {
     method: "POST",
@@ -35,13 +41,7 @@ export async function callDeepSeek(prompt: string): Promise<string> {
 export function buildPersonalityPrompt(
   games: { name: string; hours: number; playtime2Weeks: number; lastPlayed: string | null; genres: string[] }[]
 ): string {
-  // Exclude non-game apps (tools, benchmarks, etc.)
-  const isNonGame = (name: string, genres: string[]) => {
-    const nonGameNames = ["wallpaper engine", "3dmark", "pc building simulator", "cpu-z", "gpu-z"];
-    if (nonGameNames.some((n) => name.toLowerCase().includes(n)) && genres.length === 0) return true;
-    return false;
-  };
-  const gameList = games.filter((g) => !isNonGame(g.name, g.genres));
+  const gameList = games.filter((g) => !isNonGameApp(g.name) || g.genres.length > 0);
 
   const data = gameList.map((g) => ({
     name: g.name,

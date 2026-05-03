@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { callDeepSeek } from "./deepseek";
+import { callDeepSeek, isNonGameApp } from "./deepseek";
 import { fetchWithProxy } from "./fetch-with-proxy";
 
 type Mode = "backlog" | "continue_playing";
@@ -20,13 +20,6 @@ function shuffle<T>(arr: T[]): T[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
-}
-
-// Exclude non-game tools from recommendations and analysis
-const NON_GAME_NAMES = ["wallpaper engine", "3dmark", "pc building simulator", "cpu-z", "gpu-z"];
-
-function isNonGameApp(name: string): boolean {
-  return NON_GAME_NAMES.some((n) => name.toLowerCase().includes(n));
 }
 
 async function getLibraryCandidates(userId: string, mode: Mode) {

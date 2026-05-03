@@ -22,6 +22,10 @@ async function fetchOwnedGames(steamId: string): Promise<SteamApiGame[]> {
   const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${key}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true&format=json`;
 
   const res = await fetchWithProxy(url, 15000);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Steam API ${res.status}: ${body.substring(0, 300)}`);
+  }
   const json = await res.json();
 
   return (json.response?.games ?? []).map((g: any) => ({
