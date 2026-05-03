@@ -1,0 +1,63 @@
+<h2>技术栈重评估 — 开源自托管优先</h2>
+<p class="subtitle">约束：租用服务器运行一个月 → 停止 → 他人从 GitHub 本地搭建</p>
+
+<div class="options">
+  <div class="option" data-choice="nextjs-docker">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Next.js + Prisma + SQLite + Docker</h3>
+      <p>单体应用，零外部依赖，docker-compose up 即用</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>git clone && docker-compose up 一键启动</li>
+          <li>SQLite 无需额外数据库容器，无连接字符串配置</li>
+          <li>代码最简单，前后端一体 TypeScript</li>
+          <li>Next.js standalone 模式产出纯 Node 进程</li>
+          <li>服务器一月到期后，别人零门槛复现</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>SQLite 并发写入有限制（对这类项目足够了）</li>
+          <li>单容器部署，无法水平扩展（不需要）</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="nextjs-pg">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Next.js + Prisma + PostgreSQL + Docker Compose</h3>
+      <p>前后端一体 + 独立数据库，docker-compose 双容器</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>PostgreSQL 更可靠，数据持久化更有保障</li>
+          <li>同样是 docker-compose up 一键启动</li>
+          <li>生产环境标准方案</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>需要同时管理 app + db 两个容器</li>
+          <li>本地搭建需安装 Docker（A 方案也需）</li>
+          <li>SQLite 对本项目完全够用，PG 有些杀鸡用牛刀</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="python">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>FastAPI + SQLite + 纯静态前端 + Docker</h3>
+      <p>Python 后端 API + 静态 HTML/JS 前端</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>Python AI 生态最方便（直接调 DeepSeek SDK）</li>
+          <li>FastAPI 性能好，异步原生支持</li>
+          <li>前后端彻底分离，各自独立</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>需要维护两套代码（前后端类型不同步）</li>
+          <li>整体代码量比 Next.js 方案多不少</li>
+          <li>前端需额外处理构建和路由</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>

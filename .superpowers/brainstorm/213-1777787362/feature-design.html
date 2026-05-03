@@ -1,0 +1,56 @@
+<h2>MineGameStats — 功能设计总览</h2>
+<p class="subtitle">MVP 范围，基于讨论决策</p>
+
+<div class="section">
+  <h3>核心功能清单</h3>
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3>1. Steam 一键登录</h3>
+        <p>Steam OpenID 登录，无需注册，纯 Steam 账号体系。登录后自动拉取公开档案的游戏库和时长数据。</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>2. 游戏库展示</h3>
+        <p>按游玩时长、最近游玩、游戏类型等多维度排序展示。支持筛选和搜索。展示游戏封面、名称、时长、最后游玩时间。</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>3. 游戏时长词云</h3>
+        <p>基于游戏时长生成可视化词云图。玩得越久字体越大，一眼看出你的游戏偏好分布。</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>4. AI 玩家锐评</h3>
+        <p>混合风格：理性分析 + 幽默吐槽。分析游戏偏好、类型倾向、时间分配模式。调用 DeepSeek API。</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>5. 评测风格分析</h3>
+        <p>抓取玩家在 Steam 上写的游戏评测，AI 总结评价风格。后续扩展 MBTI 人格标签。</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>6. 智能游戏推荐</h3>
+        <p>规则初筛（时长 + 标签相似度）选出 5 个候选 → AI 精排并给出推荐理由。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>技术决策速览</h3>
+  <table style="width:100%;border-collapse:collapse;">
+    <tr><td style="padding:8px;border-bottom:1px solid #333;color:#888;">框架</td><td style="padding:8px;border-bottom:1px solid #333;">Next.js 14 (App Router) + TypeScript</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #333;color:#888;">数据库</td><td style="padding:8px;border-bottom:1px solid #333;">PostgreSQL + Prisma ORM</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #333;color:#888;">认证</td><td style="padding:8px;border-bottom:1px solid #333;">Steam OpenID (纯 Steam 登录)</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #333;color:#888;">AI 服务</td><td style="padding:8px;border-bottom:1px solid #333;">DeepSeek API</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #333;color:#888;">部署</td><td style="padding:8px;border-bottom:1px solid #333;">Docker Compose（App + PostgreSQL）</td></tr>
+    <tr><td style="padding:8px;border-bottom:1px solid #333;color:#888;">Steam API</td><td style="padding:8px;border-bottom:1px solid #333;">公开档案数据（后续可选 API Key 深度模式）</td></tr>
+  </table>
+</div>

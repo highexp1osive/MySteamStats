@@ -3,6 +3,7 @@ import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import StatsOverview from "@/components/StatsOverview";
 import GameList from "@/components/GameList";
+import SyncButton from "@/components/SyncButton";
 
 interface DashboardSearchParams {
   sort?: string;
@@ -72,6 +73,8 @@ export default async function DashboardPage({
     where: { id: session.userId },
   });
 
+  const hasData = totalGames > 0;
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       <StatsOverview
@@ -80,7 +83,17 @@ export default async function DashboardPage({
         total2Weeks={Math.round(total2Weeks / 60)}
         userName={user?.displayName ?? ""}
       />
-      <GameList games={games} allGenres={allGenres} />
+
+      {!hasData && (
+        <div className="mb-8">
+          <p className="text-gray-400 text-center mb-2">
+            还没有游戏数据，点击下方按钮从 Steam 同步
+          </p>
+          <SyncButton />
+        </div>
+      )}
+
+      {hasData && <GameList games={games} allGenres={allGenres} />}
     </div>
   );
 }

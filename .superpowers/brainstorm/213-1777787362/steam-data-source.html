@@ -1,0 +1,59 @@
+<h2>Steam 数据获取方式</h2>
+<p class="subtitle">决定能拉取哪些用户数据，直接影响后续功能介绍</p>
+
+<div class="options">
+  <div class="option" data-choice="public-only">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>仅限公开档案</h3>
+      <p>用户 Steam 登录即可，无需任何额外配置</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>用户体验最流畅，一键登录即用</li>
+          <li>零额外门槛，转化率高</li>
+          <li>不需要用户申请任何密钥</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>只能拉取公开档案数据</li>
+          <li>用户需将 Steam 档案设为公开</li>
+          <li>无成就、好友等深度数据</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="with-api-key">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>公开档案 + Steam API Key</h3>
+      <p>用户需自行申请免费 Steam Web API Key</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>数据更丰富（成就、好友列表等）</li>
+          <li>可做更多维度的分析</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>用户需额外操作，流失率高</li>
+          <li>增加前端配置页面和说明文档</li>
+          <li>普通用户觉得麻烦就放弃了</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="mvp-public">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>先做 A，后续可选升级到 B ⭐ 推荐</h3>
+      <p>MVP 阶段门槛最低，后续可加 B 做深度模式</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>兼顾当下和未来的灵活性</li>
+          <li>MVP 链路最短，快速验证</li>
+          <li>后期可作为"深度模式"卖点</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>架构上需预留扩展点</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>

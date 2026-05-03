@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { fetchWithProxy } from "./fetch-with-proxy";
 
 interface RawSteamGame {
   appid: number;
@@ -18,66 +19,34 @@ function getHeaderUrl(appId: number): string {
   return `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/header.jpg`;
 }
 
-// Fetch owned games from public Steam profile XML (no API key needed)
+// Fetch owned games via Steam Web API (requires API key)
 export async function fetchOwnedGames(
   steamId: string
 ): Promise<RawSteamGame[]> {
-  const url = `https://steamcommunity.com/profiles/${steamId}/games?tab=all&xml=1`;
-  const res = await fetch(url, { next: { revalidate: 0 } });
-  const text = await res.text();
+  const key = process.env.STEAM_API_KEY;
+  const url = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${key}&steamid=${steamId}&include_appinfo=true&include_played_free_games=true&format=json`;
 
-  const games: RawSteamGame[] = [];
-  const gameRegex = /<game>([\s\S]*?)<\/game>/g;
-  let match;
+  const res = await fetchWithProxy(url, undefined, 15000);
+  const json = await res.json();
 
-  while ((match = gameRegex.exec(text)) !== null) {
-    const xml = match[1];
-    const appid = parseInt(
-      xml.match(/<appID>(\d+)<\/appID>/)?.[1] ?? "0"
-    );
-    const name =
-      xml.match(/<name><!\[CDATA\[(.*?)\]\]><\/name>/)?.[1] ?? "";
-    const playtime_forever =
-      parseInt(
-        xml.match(
-          /<hoursOnRecord>(\d+(?:\.\d+)?)<\/hoursOnRecord>/
-        )?.[1] ?? "0"
-      ) * 60;
-    const playtime_2weeks =
-      parseInt(
-        xml.match(
-          /<hoursInLast2Weeks>(\d+(?:\.\d+)?)<\/hoursInLast2Weeks>/
-        )?.[1] ?? "0"
-      ) * 60;
-    const img_icon_url =
-      xml.match(/<logo><!\[CDATA\[(.*?)\]\]><\/logo>/)?.[1] ?? "";
-    const img_logo_url =
-      xml.match(/<logo><!\[CDATA\[(.*?)\]\]><\/logo>/)?.[1] ?? "";
-    const last_played = xml.match(
-      /<lastPlayed>(\d+)<\/lastPlayed>/
-    )?.[1];
-
-    if (appid > 0) {
-      games.push({
-        appid,
-        name,
-        playtime_forever: Math.round(playtime_forever),
-        playtime_2weeks: Math.round(playtime_2weeks),
-        img_icon_url,
-        img_logo_url,
-        last_played: last_played ? parseInt(last_played) : undefined,
-      });
-    }
-  }
-
-  return games;
+  const apiGames = json.response?.games ?? [];
+  return apiGames.map((g: any) => ({
+    appid: g.appid,
+    name: g.name ?? `App ${g.appid}`,
+    playtime_forever: g.playtime_forever ?? 0,
+    playtime_2weeks: g.playtime_2weeks ?? 0,
+    img_icon_url: g.img_icon_url ?? "",
+    img_logo_url: g.img_logo_url ?? "",
+    last_played: g.rtime_last_played ?? undefined,
+  }))
+  .sort((a: { playtime_forever: number }, b: { playtime_forever: number }) => b.playtime_forever - a.playtime_forever);
 }
 
 // Fetch game genres from Steam store API
 export async function fetchGameGenres(appId: number): Promise<string[]> {
   try {
     const url = `https://store.steampowered.com/api/appdetails?appids=${appId}`;
-    const res = await fetch(url);
+    const res = await fetchWithProxy(url, undefined, 10000);
     const json = await res.json();
     const data = json[appId]?.data;
     if (!data?.genres) return [];
@@ -154,7 +123,7 @@ interface RawReview {
 export async function fetchUserReviews(steamId: string): Promise<RawReview[]> {
   try {
     const url = `https://steamcommunity.com/profiles/${steamId}/recommended/`;
-    const res = await fetch(url);
+    const res = await fetchWithProxy(url, undefined, 10000);
     const text = await res.text();
 
     const reviews: RawReview[] = [];

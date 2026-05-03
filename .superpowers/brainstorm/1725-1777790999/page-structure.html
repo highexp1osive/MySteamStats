@@ -1,0 +1,61 @@
+<h2>页面结构与用户流程</h2>
+<p class="subtitle">共 5 个页面，单一用户流程</p>
+
+<div class="section">
+  <h3>用户路径</h3>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:20px 0;font-size:14px;">
+    <span style="background:#1a1a2e;padding:8px 16px;border-radius:8px;">🏠 首页</span>
+    <span style="color:#888;">→</span>
+    <span style="background:#1a1a2e;padding:8px 16px;border-radius:8px;">🔑 Steam 登录</span>
+    <span style="color:#888;">→</span>
+    <span style="background:#1a1a2e;padding:8px 16px;border-radius:8px;">📊 个人主页</span>
+    <span style="color:#888;">⇄</span>
+    <span style="background:#1a1a2e;padding:8px 16px;border-radius:8px;">🌌 星系视图</span>
+    <span style="color:#888;">⇄</span>
+    <span style="background:#1a1a2e;padding:8px 16px;border-radius:8px;">🧠 AI 锐评</span>
+    <span style="color:#888;">⇄</span>
+    <span style="background:#1a1a2e;padding:8px 16px;border-radius:8px;">🎯 推荐</span>
+  </div>
+</div>
+
+<div class="section">
+  <h3>页面详情</h3>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-body">
+        <h3>🏠 首页 /</h3>
+        <p>项目介绍 + 大大的"连接 Steam"按钮。展示示例截图吸引用户登录。</p>
+        <p class="label">无需登录即可访问</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>📊 个人主页 /dashboard</h3>
+        <p>数据总览：游戏总数、总时长、最近游玩、时长 TOP10 列表。侧边栏导航到各子页面。游戏库列表支持排序/筛选。</p>
+        <p class="label">需登录</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>🌌 星系视图 /galaxy</h3>
+        <p>星球环绕型封面可视化。3D 可拖拽旋转，悬停显示详情，点击进游戏详情。</p>
+        <p class="label">需登录</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>🧠 AI 锐评 /analysis</h3>
+        <p>三个 Tab：玩家性格锐评 | 评测风格分析 | MBTI 人格标签(后续)。每次打开或点击刷新重新生成。</p>
+        <p class="label">需登录 · 调用 DeepSeek</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3>🎯 游戏推荐 /recommend</h3>
+        <p>规则初筛 5 个候选 → AI 精排推荐。每款推荐附带 AI 写的推荐理由。可点击跳转游戏详情。</p>
+        <p class="label">需登录 · 调用 DeepSeek</p>
+      </div>
+    </div>
+  </div>
+</div>

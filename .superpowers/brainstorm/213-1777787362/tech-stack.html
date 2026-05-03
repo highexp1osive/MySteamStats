@@ -1,0 +1,64 @@
+<h2>技术栈方案对比</h2>
+<p class="subtitle">公开平台 · 代码简洁 · 安全 · 长期运维友好</p>
+
+<div class="options">
+  <div class="option" data-choice="nextjs">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Next.js 14 + Prisma + PostgreSQL</h3>
+      <p>前后端一体，TypeScript 全覆盖，Vercel 一键部署</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>一个仓库搞定全栈，代码量最少</li>
+          <li>Server Actions / API Routes 天然安全（无暴露端点）</li>
+          <li>Vercel 免费额度足够起步，运维零成本</li>
+          <li>TypeScript 端到端类型安全</li>
+          <li>社区庞大，AI 辅助开发效率最高</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>Vercel 平台有一定绑定</li>
+          <li>Serverless 函数有 60s 超时（AI 分析可能受限）</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="react-express">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>React SPA + Express + PostgreSQL</h3>
+      <p>传统前后端分离，自建 API 服务器</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>前后端独立部署，灵活控制</li>
+          <li>无超时限制，适合长时 AI 分析</li>
+          <li>不绑定任何云平台</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>需要管理服务器/容器，运维成本高</li>
+          <li>前后端类型同步麻烦</li>
+          <li>需自行处理 CORS、安全、认证中间件</li>
+          <li>代码量大概是 A 方案的 1.5-2 倍</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="django">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Django + HTMX + PostgreSQL</h3>
+      <p>Python 全栈，模板渲染 + 少量 JS</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul>
+          <li>Python 生态方便对接 AI/数据分析</li>
+          <li>Django 内置认证、后台管理，开箱即用</li>
+          <li>成熟稳定，适合数据密集型应用</li>
+        </ul></div>
+        <div class="cons"><h4>缺点</h4><ul>
+          <li>前端交互不如 React 流畅</li>
+          <li>词云、可视化等需要额外前端工作</li>
+          <li>部署比 Vercel 方案重</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+</div>

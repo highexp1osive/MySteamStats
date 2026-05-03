@@ -1,0 +1,65 @@
+<h2>数据模型设计</h2>
+<p class="subtitle">PostgreSQL · Prisma ORM · 5 张核心表</p>
+
+<div style="font-family:monospace;font-size:13px;line-height:1.6;">
+
+<div class="section">
+  <h3>User — 用户</h3>
+  <div style="background:#0d1117;padding:12px;border-radius:8px;">
+    <div><span style="color:#79c0ff;">id</span> <span style="color:#888;">UUID</span> <span style="color:#555;"># 主键</span></div>
+    <div><span style="color:#79c0ff;">steamId</span> <span style="color:#888;">String</span> <span style="color:#555;"># Steam 64位ID，唯一</span></div>
+    <div><span style="color:#79c0ff;">displayName</span> <span style="color:#888;">String</span> <span style="color:#555;"># Steam 昵称</span></div>
+    <div><span style="color:#79c0ff;">avatarUrl</span> <span style="color:#888;">String</span> <span style="color:#555;"># Steam 头像 URL</span></div>
+    <div><span style="color:#79c0ff;">profileUrl</span> <span style="color:#888;">String</span> <span style="color:#555;"># Steam 个人资料链接</span></div>
+    <div><span style="color:#79c0ff;">lastSyncAt</span> <span style="color:#888;">DateTime</span> <span style="color:#555;"># 上次数据同步时间</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Game — 游戏（全局共享）</h3>
+  <div style="background:#0d1117;padding:12px;border-radius:8px;">
+    <div><span style="color:#79c0ff;">id</span> <span style="color:#888;">UUID</span></div>
+    <div><span style="color:#79c0ff;">steamAppId</span> <span style="color:#888;">Int</span> <span style="color:#555;"># Steam App ID，唯一</span></div>
+    <div><span style="color:#79c0ff;">name</span> <span style="color:#888;">String</span></div>
+    <div><span style="color:#79c0ff;">coverUrl</span> <span style="color:#888;">String</span> <span style="color:#555;"># 封面图 CDN 地址</span></div>
+    <div><span style="color:#79c0ff;">headerUrl</span> <span style="color:#888;">String</span> <span style="color:#555;"># 大横幅</span></div>
+    <div><span style="color:#79c0ff;">genres</span> <span style="color:#888;">String[]</span> <span style="color:#555;"># 类型标签</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>UserGame — 用户游戏关联</h3>
+  <div style="background:#0d1117;padding:12px;border-radius:8px;">
+    <div><span style="color:#79c0ff;">id</span> <span style="color:#888;">UUID</span></div>
+    <div><span style="color:#79c0ff;">userId</span> <span style="color:#888;">UUID → User</span></div>
+    <div><span style="color:#79c0ff;">gameId</span> <span style="color:#888;">UUID → Game</span></div>
+    <div><span style="color:#79c0ff;">playtimeMinutes</span> <span style="color:#888;">Int</span> <span style="color:#555;"># 总游玩时长（分钟）</span></div>
+    <div><span style="color:#79c0ff;">playtime2Weeks</span> <span style="color:#888;">Int</span> <span style="color:#555;"># 近两周时长</span></div>
+    <div><span style="color:#79c0ff;">lastPlayedAt</span> <span style="color:#888;">DateTime?</span> <span style="color:#555;"># 最后游玩时间</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>UserReview — 玩家评测</h3>
+  <div style="background:#0d1117;padding:12px;border-radius:8px;">
+    <div><span style="color:#79c0ff;">id</span> <span style="color:#888;">UUID</span></div>
+    <div><span style="color:#79c0ff;">userId</span> <span style="color:#888;">UUID → User</span></div>
+    <div><span style="color:#79c0ff;">gameId</span> <span style="color:#888;">UUID → Game</span></div>
+    <div><span style="color:#79c0ff;">content</span> <span style="color:#888;">Text</span> <span style="color:#555;"># 评测全文</span></div>
+    <div><span style="color:#79c0ff;">isRecommended</span> <span style="color:#888;">Boolean</span> <span style="color:#555;"># 推荐/不推荐</span></div>
+    <div><span style="color:#79c0ff;">steamReviewId</span> <span style="color:#888;">String</span> <span style="color:#555;"># Steam 评测 ID</span></div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>AIAnalysis — AI 分析缓存</h3>
+  <div style="background:#0d1117;padding:12px;border-radius:8px;">
+    <div><span style="color:#79c0ff;">id</span> <span style="color:#888;">UUID</span></div>
+    <div><span style="color:#79c0ff;">userId</span> <span style="color:#888;">UUID → User</span></div>
+    <div><span style="color:#79c0ff;">type</span> <span style="color:#888;">Enum</span> <span style="color:#555;"># personality | review_style | recommendation</span></div>
+    <div><span style="color:#79c0ff;">content</span> <span style="color:#888;">JsonB</span> <span style="color:#555;"># AI 分析结果</span></div>
+    <div><span style="color:#79c0ff;">generatedAt</span> <span style="color:#888;">DateTime</span></div>
+  </div>
+</div>
+
+</div>

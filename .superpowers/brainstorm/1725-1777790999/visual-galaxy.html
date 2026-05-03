@@ -1,0 +1,41 @@
+<h2>游戏封面可视化 — 星球环绕型</h2>
+<p class="subtitle">中心引力球 + 游戏封面行星环绕，时长决定位置和大小</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">视觉效果示意</div>
+    <div class="mockup-body">
+      <div style="text-align:center;padding:20px;background:#0a0a1a;border-radius:12px;min-height:300px;display:flex;align-items:center;justify-content:center;position:relative;">
+        <div style="width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,#ff6b35,#ff3366);position:absolute;box-shadow:0 0 40px rgba(255,107,53,0.6);"></div>
+        <div style="width:80px;height:100px;background:#1a3a5c;border-radius:6px;position:absolute;top:40px;left:80px;font-size:8px;color:#aaa;text-align:center;line-height:100px;">560h</div>
+        <div style="width:65px;height:80px;background:#2a5a3c;border-radius:5px;position:absolute;top:150px;left:50px;font-size:7px;color:#aaa;text-align:center;line-height:80px;">320h</div>
+        <div style="width:45px;height:56px;background:#3a2a5c;border-radius:4px;position:absolute;top:30px;right:70px;font-size:7px;color:#aaa;text-align:center;line-height:56px;">180h</div>
+        <div style="width:35px;height:44px;background:#4a4a2c;border-radius:3px;position:absolute;bottom:50px;right:50px;font-size:6px;color:#aaa;text-align:center;line-height:44px;">80h</div>
+        <div style="width:50px;height:62px;background:#5a2a4c;border-radius:4px;position:absolute;bottom:30px;left:120px;font-size:7px;color:#aaa;text-align:center;line-height:62px;">250h</div>
+        <div style="width:30px;height:38px;background:#2a4a4c;border-radius:3px;position:absolute;top:100px;right:30px;font-size:6px;color:#aaa;text-align:center;line-height:38px;">40h</div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">交互说明</div>
+    <div class="mockup-body">
+      <div style="padding:16px;">
+        <div class="pros-cons">
+          <div class="pros"><h4>视觉规则</h4><ul>
+            <li>中心为用户 Steam 头像（发光引力球效果）</li>
+            <li>玩得越久 → 离中心越近、封面越大</li>
+            <li>悬停封面显示游戏名称 + 时长</li>
+            <li>点击封面跳转该游戏详情</li>
+            <li>支持拖拽旋转浏览</li>
+          </ul></div>
+          <div class="cons"><h4>技术实现</h4><ul>
+            <li>Three.js / D3.js 力导向图</li>
+            <li>封面图从 Steam CDN 获取</li>
+            <li>3D 环绕轨道动画</li>
+            <li>响应式适配移动端</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<h2>最终推荐方案</h2>
+<p class="subtitle">公开平台 30 天 + 开源自托管，兼顾两个场景</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">你的 30 天公开站</div>
+    <div class="mockup-body">
+      <div class="placeholder" style="padding:16px;text-align:left">
+        <strong>VPS 服务器</strong><br><br>
+        docker-compose up<br><br>
+        ┌─────────────────┐<br>
+        │  Next.js App    │ ← 多用户同时访问<br>
+        │  (端口 3000)    │<br>
+        └───────┬─────────┘<br>
+                │<br>
+        ┌───────┴─────────┐<br>
+        │  PostgreSQL     │ ← 支持并发读写<br>
+        │  (端口 5432)    │<br>
+        └─────────────────┘<br>
+      </div>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">开源用户自托管</div>
+    <div class="mockup-body">
+      <div class="placeholder" style="padding:16px;text-align:left">
+        <strong>个人电脑</strong><br><br>
+        git clone<br>
+        docker-compose up<br><br>
+        → 同样的两个容器启动<br>
+        → 同样的功能体验<br>
+        → 连接自己的 Steam 账号<br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="pros-cons">
+    <div class="pros"><h4>为什么选 PostgreSQL</h4><ul>
+      <li>多用户并发读写无压力（你的公开站时期）</li>
+      <li>docker-compose 一键同时启动 App + DB</li>
+      <li>自托管用户也只是多等 3 秒拉镜像</li>
+      <li>Prisma 切换 SQLite ↔ PG 只需改一行配置</li>
+    </ul></div>
+    <div class="cons"><h4>权衡</h4><ul>
+      <li>比纯 SQLite 多一个容器</li>
+      <li>首次冷启动需要拉取 PG 镜像（~150MB）</li>
+      <li>两个环境变量需要配置（DB 用户名/密码）</li>
+    </ul></div>
+  </div>
+</div>
