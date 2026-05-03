@@ -2,9 +2,6 @@
 
 连接 Steam 账号，深度分析你的游戏人生。
 
-![screenshot](https://img.shields.io/badge/status-live-brightgreen)
-![license](https://img.shields.io/badge/license-MIT-blue)
-
 ## 功能
 
 - **Steam 一键登录** — 通过 Steam OpenID 安全登录，无需注册
@@ -16,71 +13,109 @@
 
 ## 技术栈
 
-| 层级 | 选型 |
-|------|------|
-| 框架 | Next.js 14 (App Router) + TypeScript |
-| 数据库 | PostgreSQL + Prisma ORM |
-| 样式 | Tailwind CSS |
-| 认证 | Steam OpenID + iron-session |
-| AI | DeepSeek V4 Flash |
-| 部署 | Vercel + Neon (免费) 或 Docker Compose |
-| 可视化 | Canvas 2D |
+Next.js 14 + TypeScript / PostgreSQL + Prisma / Tailwind CSS / Steam OpenID / DeepSeek V4 Flash
 
-## 部署
+---
 
-### Vercel + Neon（推荐，免费）
+## 本地运行（不用 Vercel，在自己电脑上跑）
+
+### 前提
+
+- [Node.js 18+](https://nodejs.org/)
+- [PostgreSQL 16](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)（安装时记住 postgres 用户的密码）
+
+### 步骤
+
+**1. 克隆项目**
+```bash
+git clone https://github.com/highexp1osive/MySteamStats.git
+cd MySteamStats
+```
+
+**2. 安装依赖**
+```bash
+npm install
+```
+
+**3. 配置环境变量**
+```bash
+cp .env.example .env
+```
+编辑 `.env`，填入：
+```env
+DATABASE_URL="postgresql://postgres:你的密码@localhost:5432/mysteamstats"
+STEAM_API_KEY="你的Key"           # 去 https://steamcommunity.com/dev/apikey 免费申请
+DEEPSEEK_API_KEY="你的Key"        # 去 https://platform.deepseek.com 注册充值 ¥1
+DEEPSEEK_BASE_URL="https://api.deepseek.com"
+SESSION_SECRET="随便输一段32位以上的随机字符串"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+HTTP_PROXY=""                     # 在国内需要填代理地址，如 http://127.0.0.1:7890
+```
+
+**4. 创建数据库表**
+```bash
+npx prisma db push
+```
+
+**5. 启动**
+```bash
+npm run dev
+```
+浏览器打开 http://localhost:3000
+
+**6. 登录使用**
+
+先确保 Steam 隐私设置中"游戏详情"为**公开**，然后点"连接 Steam"登录。
+
+---
+
+## Vercel 部署（免费，公网可访问）
 
 1. Fork 本项目到你的 GitHub
-
-2. 注册 [Neon](https://neon.tech)，创建 PostgreSQL 16 数据库，获取连接字符串
-
-3. 注册 [Vercel](https://vercel.com)，导入仓库
-
-4. 在 Vercel Settings → Environment Variables 添加：
+2. 注册 [Neon](https://neon.tech) → 创建 PostgreSQL 16 数据库 → 复制连接字符串
+3. 注册 [Vercel](https://vercel.com) → Import 仓库
+4. Vercel → Settings → Environment Variables，添加：
 
 | Key | Value |
 |-----|-------|
 | `DATABASE_URL` | Neon 数据库连接字符串 |
-| `STEAM_API_KEY` | [Steam Web API Key](https://steamcommunity.com/dev/apikey)（免费申请） |
-| `DEEPSEEK_API_KEY` | [DeepSeek API Key](https://platform.deepseek.com/)（充值 ¥1 即可） |
+| `STEAM_API_KEY` | 你的 Steam Web API Key |
+| `DEEPSEEK_API_KEY` | 你的 DeepSeek API Key |
 | `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` |
 | `SESSION_SECRET` | 随机字符串（至少 32 位） |
-| `NEXT_PUBLIC_APP_URL` | Vercel 分配的域名 |
+| `NEXT_PUBLIC_APP_URL` | Vercel 分配的域名（如 `https://xxx.vercel.app`） |
 
-5. 本地运行建表命令（用你的 Neon URL）：
+5. 本地执行一次建表（用 Neon URL）：
 ```bash
-DATABASE_URL="你的Neon连接串" npx prisma db push
+DATABASE_URL="Neon连接字符串" npx prisma db push
 ```
+6. Vercel 点 Deploy，完成。
 
-6. 部署完成
+---
 
-### Docker 自建部署
+## Docker 部署
 
 ```bash
-git clone https://github.com/你的用户名/MySteamStats.git
+git clone https://github.com/highexp1osive/MySteamStats.git
 cd MySteamStats
 cp .env.example .env
-# 编辑 .env 填入你的 API Key
+# 编辑 .env 填入配置
 docker-compose up -d
 # 访问 http://localhost:3000
 ```
 
-## 本地开发
+---
 
-```bash
-npm install
-cp .env.example .env
-# 编辑 .env 填入配置
-npx prisma db push
-npm run dev
-# 访问 http://localhost:3000
-```
+## 申请 API Key
+
+- **Steam API Key**：访问 [steamcommunity.com/dev/apikey](https://steamcommunity.com/dev/apikey)，填 `localhost` 作为域名，免费
+- **DeepSeek API Key**：访问 [platform.deepseek.com](https://platform.deepseek.com)，注册并充值最低 ¥1，在 API Keys 页面创建
 
 ## 注意事项
 
-- **Steam 游戏库隐私设置**：需要将 Steam 个人资料的「游戏详情」设为「公开」
-- **代理配置**：如果服务器在国内，需要设置 `HTTP_PROXY` 环境变量才能访问 Steam API
-- **DeepSeek 费用**：每次分析约 ¥0.006，¥1 能用 150+ 次
+- 需要将 Steam 个人资料的「游戏详情」设为「公开」
+- 国内网络环境访问 Steam API 需要代理，在 `.env` 中配置 `HTTP_PROXY`
+- DeepSeek 每次分析约 ¥0.006，¥1 能用 150+ 次
 
 ## License
 
