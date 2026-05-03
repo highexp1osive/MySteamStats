@@ -3,45 +3,18 @@ import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import StatsOverview from "@/components/StatsOverview";
 import GameList from "@/components/GameList";
-import SyncButton from "@/components/SyncButton";
+import AutoSync from "@/components/AutoSync";
+import TabNav from "@/components/TabNav";
 
-interface DashboardSearchParams {
-  sort?: string;
-  q?: string;
-}
-
-export default async function DashboardPage({
-  searchParams,
-}: {
-  searchParams: DashboardSearchParams;
-}) {
+export default async function DashboardPage() {
   const session = await getSession();
   if (!session.userId) redirect("/");
 
-  const sort = searchParams.sort ?? "playtime";
-  const query = searchParams.q ?? "";
-
-  let orderBy: Record<string, string> = { playtimeMinutes: "desc" };
-  if (sort === "recent") orderBy = { lastPlayedAt: "desc" };
-  if (sort === "name") orderBy = { game: { name: "asc" } } as any;
-
-  const where: any = { userId: session.userId };
-  if (query) {
-    where.game = { name: { contains: query, mode: "insensitive" } };
-  }
-
   const userGames = await db.userGame.findMany({
-    where,
+    where: { userId: session.userId },
     include: { game: true },
-    orderBy: sort === "name" ? { game: { name: "asc" } } : { playtimeMinutes: "desc" },
+    orderBy: { playtimeMinutes: "desc" },
   });
-
-  // Apply sort for recent in memory (Prisma sort on nullable is tricky)
-  if (sort === "recent") {
-    userGames.sort((a, b) =>
-      (b.lastPlayedAt?.getTime() ?? 0) - (a.lastPlayedAt?.getTime() ?? 0)
-    );
-  }
 
   const totalGames = userGames.length;
   const totalMinutes = userGames.reduce(
@@ -76,24 +49,20 @@ export default async function DashboardPage({
   const hasData = totalGames > 0;
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <StatsOverview
-        totalGames={totalGames}
-        totalHours={Math.round(totalMinutes / 60)}
-        total2Weeks={Math.round(total2Weeks / 60)}
-        userName={user?.displayName ?? ""}
-      />
+    <div className="max-w-7xl mx-auto">
+      <TabNav current="dashboard" />
 
-      {!hasData && (
-        <div className="mb-8">
-          <p className="text-gray-400 text-center mb-2">
-            还没有游戏数据，点击下方按钮从 Steam 同步
-          </p>
-          <SyncButton />
-        </div>
-      )}
+      <div className="px-4 sm:px-6 pb-6">
+        <StatsOverview
+          totalGames={totalGames}
+          totalHours={Math.round(totalMinutes / 60)}
+          total2Weeks={Math.round(total2Weeks / 60)}
+          userName={user?.displayName ?? ""}
+        />
 
-      {hasData && <GameList games={games} allGenres={allGenres} />}
+        {!hasData && <AutoSync />}
+        {hasData && <GameList games={games} allGenres={allGenres} />}
+      </div>
     </div>
   );
 }

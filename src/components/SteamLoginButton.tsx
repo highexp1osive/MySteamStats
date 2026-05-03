@@ -17,24 +17,16 @@ export default function SteamLoginButton() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="w-8 h-8 bg-gray-800 rounded-full animate-pulse" />
-    );
+    return <div className="w-8 h-8 bg-[#e2e8f0] rounded-full animate-pulse" />;
   }
 
   if (user) {
     return (
       <div className="flex items-center gap-2">
         {user.avatarUrl && (
-          <img
-            src={user.avatarUrl}
-            alt=""
-            className="w-8 h-8 rounded-full"
-          />
+          <img src={user.avatarUrl} alt="" className="w-7 h-7 rounded-full" />
         )}
-        <span className="text-sm text-gray-300">
-          {user.displayName}
-        </span>
+        <span className="text-sm text-[#5f7d9a]">{user.displayName}</span>
       </div>
     );
   }
@@ -42,7 +34,7 @@ export default function SteamLoginButton() {
   return (
     <a
       href="/api/auth/login"
-      className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition flex items-center gap-2"
+      className="bg-[#1a9fff] hover:bg-[#1789dd] text-white px-4 py-1.5 rounded-full text-sm font-medium transition"
     >
       连接 Steam
     </a>

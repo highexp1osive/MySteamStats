@@ -1,0 +1,41 @@
+<h2>Tab 导航布局</h2>
+<p class="subtitle">页面中上方的图标 + 文字 Tab 栏</p>
+
+<div style="background:#f3f5f7;min-height:200px;border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;">
+
+  <!-- Tab 导航栏 -->
+  <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;padding:6px;display:inline-flex;gap:2px;box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+    <div style="background:#1a9fff;color:#fff;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      游戏库
+    </div>
+    <div style="color:#5f7d9a;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="8" r="1.5"/><circle cx="20" cy="14" r="1.5"/><circle cx="8" cy="18" r="1.5"/><circle cx="16" cy="6" r="1.5"/></svg>
+      星系
+    </div>
+    <div style="color:#5f7d9a;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4c0 2-4 6-4 6s-4-4-4-6a4 4 0 014-4z"/><circle cx="12" cy="6" r="1"/><path d="M8 14l4 4 4-4"/></svg>
+      AI 锐评
+    </div>
+    <div style="color:#5f7d9a;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9 16 14 18 21 12 17 6 21 8 14 2 9 9 9"/></svg>
+      推荐
+    </div>
+  </div>
+
+  <div style="margin-top:24px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:40px;width:100%;text-align:center;color:#5f7d9a;font-size:13px;">
+    页面内容区域
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <h3>布局说明</h3>
+  <div style="font-size:13px;color:#171a21;line-height:1.8;">
+    • 顶部：MySteamStats Logo（左）+ Steam 登录按钮（右）—— 深色导航栏<br>
+    • Tab 栏：页面内容区顶部居中，白色圆角方框包裹<br>
+    • 每个 Tab 有 SVG 图标 + 文字<br>
+    • 选中态：蓝色填充 + 白色文字<br>
+    • 未选中态：灰色文字，悬停变深<br>
+    • 页面内容：下方白色卡片区域
+  </div>
+</div>

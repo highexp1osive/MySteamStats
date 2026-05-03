@@ -1,0 +1,55 @@
+<h2>首页布局 — 未登录</h2>
+<p class="subtitle">Steam 按钮居中 + 简洁介绍</p>
+
+<div style="background:#f3f5f7;min-height:350px;border-radius:12px;padding:0;overflow:hidden;">
+
+  <!-- 顶部导航栏 -->
+  <div style="background:#171a21;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="color:#fff;font-weight:700;font-size:15px;">MySteamStats</span>
+    <div style="display:flex;gap:16px;font-size:12px;">
+      <span style="color:#c7d5e0;">功能</span>
+      <span style="color:#c7d5e0;">关于</span>
+    </div>
+  </div>
+
+  <!-- 中央内容 -->
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;">
+    <h1 style="color:#171a21;font-size:28px;font-weight:700;margin:0 0 8px 0;">探索你的 Steam 游戏人生</h1>
+    <p style="color:#5f7d9a;font-size:14px;margin:0 0 32px 0;max-width:400px;">连接 Steam 账号，获取游戏库可视化、AI 锐评和智能推荐</p>
+
+    <div style="background:linear-gradient(135deg,#1a9fff,#2a475e);color:#fff;padding:14px 32px;border-radius:28px;font-size:15px;font-weight:600;display:inline-flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 14px rgba(26,159,255,0.3);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l5.59-5.59L18 10l-7 7z"/></svg>
+      连接 Steam
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:20px;">
+  <h3>登录后布局</h3>
+  <div style="background:#f3f5f7;min-height:280px;border-radius:12px;overflow:hidden;margin-top:12px;">
+
+    <!-- 导航栏 -->
+    <div style="background:#171a21;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="color:#fff;font-weight:700;font-size:15px;">MySteamStats</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:28px;height:28px;background:#1a9fff;border-radius:50%;"></div>
+        <span style="color:#c7d5e0;font-size:12px;">玩家名称</span>
+      </div>
+    </div>
+
+    <!-- Tab 导航栏（页面中间上方） -->
+    <div style="display:flex;justify-content:center;padding:16px;">
+      <div style="background:#fff;border-radius:12px;border:1px solid #e2e8f0;padding:5px;display:inline-flex;gap:2px;box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+        <div style="background:#1a9fff;color:#fff;padding:8px 16px;border-radius:9px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;">█ 游戏库</div>
+        <div style="color:#5f7d9a;padding:8px 16px;border-radius:9px;font-size:13px;display:flex;align-items:center;gap:6px;">◎ 星系</div>
+        <div style="color:#5f7d9a;padding:8px 16px;border-radius:9px;font-size:13px;display:flex;align-items:center;gap:6px;">◆ AI 锐评</div>
+        <div style="color:#5f7d9a;padding:8px 16px;border-radius:9px;font-size:13px;display:flex;align-items:center;gap:6px;">★ 推荐</div>
+      </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div style="background:#fff;margin:0 24px 24px;border-radius:12px;border:1px solid #e2e8f0;padding:32px;text-align:center;color:#5f7d9a;font-size:13px;">
+      页面内容
+    </div>
+  </div>
+</div>

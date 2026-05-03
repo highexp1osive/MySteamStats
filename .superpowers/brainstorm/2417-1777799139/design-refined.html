@@ -1,0 +1,92 @@
+<h2>MySteamStats 视觉风格</h2>
+<p class="subtitle">Steam 同款配色 · 圆角 · 白色为主 · 蓝灰为辅</p>
+
+<div class="section">
+  <h3>配色方案</h3>
+  <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;">
+    <div style="text-align:center;">
+      <div style="width:48px;height:48px;background:#ffffff;border-radius:50%;border:1px solid #ddd;"></div>
+      <span style="font-size:11px;color:#888;">主色 #fff</span>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:48px;height:48px;background:#f3f5f7;border-radius:50%;border:1px solid #ddd;"></div>
+      <span style="font-size:11px;color:#888;">背景 #f3f5f7</span>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:48px;height:48px;background:#171a21;border-radius:50%;"></div>
+      <span style="font-size:11px;color:#888;">深色 #171a21</span>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:48px;height:48px;background:#1a9fff;border-radius:50%;"></div>
+      <span style="font-size:11px;color:#888;">强调 #1a9fff</span>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:48px;height:48px;background:#2a475e;border-radius:50%;"></div>
+      <span style="font-size:11px;color:#888;">辅助 #2a475e</span>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:48px;height:48px;background:#c7d5e0;border-radius:50%;"></div>
+      <span style="font-size:11px;color:#888;">文字 #c7d5e0</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>组件风格预览</h3>
+
+  <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #e2e8f0;margin-bottom:12px;">
+    <h4 style="color:#171a21;margin:0 0 4px 0;font-size:15px;">游戏卡片</h4>
+    <div style="display:flex;gap:12px;">
+      <div style="width:100px;height:125px;background:linear-gradient(135deg,#2a475e,#1a9fff);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;">封面</div>
+      <div>
+        <div style="color:#171a21;font-weight:600;font-size:14px;">Counter-Strike 2</div>
+        <div style="color:#5f7d9a;font-size:12px;margin-top:4px;">2,430 小时</div>
+        <div style="background:#1a9fff;color:#fff;display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;margin-top:6px;">FPS</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #e2e8f0;margin-bottom:12px;">
+    <h4 style="color:#171a21;margin:0 0 4px 0;font-size:15px;">导航栏</h4>
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#171a21;border-radius:10px;padding:10px 16px;color:#fff;">
+      <span style="font-weight:700;font-size:14px;">MySteamStats</span>
+      <div style="display:flex;gap:16px;font-size:12px;">
+        <span style="color:#1a9fff;">游戏库</span>
+        <span style="color:#c7d5e0;">星系</span>
+        <span style="color:#c7d5e0;">AI 锐评</span>
+        <span style="color:#c7d5e0;">推荐</span>
+      </div>
+      <div style="background:#1a9fff;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;">连接 Steam</div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border-radius:12px;padding:16px;border:1px solid #e2e8f0;">
+    <h4 style="color:#171a21;margin:0 0 4px 0;font-size:15px;">数据统计卡</h4>
+    <div style="display:flex;gap:12px;">
+      <div style="flex:1;background:#f3f5f7;border-radius:10px;padding:14px;text-align:center;border:1px solid #e2e8f0;">
+        <div style="color:#1a9fff;font-size:22px;font-weight:700;">414</div>
+        <div style="color:#5f7d9a;font-size:11px;">游戏总数</div>
+      </div>
+      <div style="flex:1;background:#f3f5f7;border-radius:10px;padding:14px;text-align:center;border:1px solid #e2e8f0;">
+        <div style="color:#1a9fff;font-size:22px;font-weight:700;">3,842h</div>
+        <div style="color:#5f7d9a;font-size:11px;">总时长</div>
+      </div>
+      <div style="flex:1;background:#f3f5f7;border-radius:10px;padding:14px;text-align:center;border:1px solid #e2e8f0;">
+        <div style="color:#1a9fff;font-size:22px;font-weight:700;">12h</div>
+        <div style="color:#5f7d9a;font-size:11px;">近两周</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>核心设计规则</h3>
+  <div style="background:#f3f5f7;border-radius:10px;padding:14px;font-size:13px;color:#171a21;line-height:1.8;">
+    • 主背景白色，卡片区用浅灰 <span style="background:#f3f5f7;padding:1px 6px;border-radius:4px;">#f3f5f7</span><br>
+    • 卡片圆角 10-12px，按钮胶囊形 (border-radius: 20px+)<br>
+    • 导航栏深色 <span style="background:#171a21;color:#fff;padding:1px 6px;border-radius:4px;">#171a21</span>，和页面白色形成对比<br>
+    • 强调色 <span style="background:#1a9fff;color:#fff;padding:1px 6px;border-radius:4px;">#1a9fff</span> 只用在关键交互元素<br>
+    • 文字：深色 #171a21，辅助文字 #5f7d9a<br>
+    • 字体保持 Inter，字号 13-15px 为主
+  </div>
+</div>
