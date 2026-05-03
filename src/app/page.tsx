@@ -19,8 +19,8 @@ const features = [
         <circle cx="12" cy="12" r="3" /><circle cx="4" cy="8" r="1.5" /><circle cx="20" cy="14" r="1.5" /><circle cx="8" cy="18" r="1.5" /><circle cx="16" cy="6" r="1.5" />
       </svg>
     ),
-    title: "3D 星系视图",
-    desc: "时长决定位置，封面像行星环绕你的头像",
+    title: "封面拼图",
+    desc: "螺旋排列生成高清封面大图，时长越多越靠近中心",
   },
   {
     icon: (
@@ -40,15 +40,6 @@ const features = [
     title: "智能推荐",
     desc: "根据游玩习惯，推荐库中接下来该玩的游戏",
   },
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
-      </svg>
-    ),
-    title: "评测风格分析",
-    desc: "AI 分析你的 Steam 评测，总结你的评价风格",
-  },
 ];
 
 export default async function HomePage() {
@@ -60,7 +51,7 @@ export default async function HomePage() {
   if (loggedIn) {
     const userGames = await db.userGame.findMany({
       where: { userId: session.userId },
-      include: { game: true },
+      select: { playtimeMinutes: true },
     });
 
     stats = {
@@ -105,7 +96,7 @@ export default async function HomePage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 w-full max-w-4xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full max-w-4xl">
           {features.map((f) => (
             <div
               key={f.title}

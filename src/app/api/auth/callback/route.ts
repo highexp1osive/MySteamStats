@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { syncGameLibrary, syncReviews } from "@/lib/steam";
+import { syncGameLibrary } from "@/lib/steam";
 import { fetchWithProxy } from "@/lib/fetch-with-proxy";
 
 function extractSteamId(request: NextRequest): string | null {
@@ -51,7 +51,6 @@ export async function GET(request: NextRequest) {
   await session.save();
 
   syncGameLibrary(user.id, steamId).catch((e) => console.error("Game sync failed:", e.message));
-  syncReviews(user.id, steamId).catch((e) => console.error("Review sync failed:", e.message));
 
   return NextResponse.redirect(new URL("/dashboard", request.url));
 }
