@@ -1,4 +1,4 @@
-# MineGameStats 实现计划
+# MySteamStats 实现计划
 
 > **面向 AI 代理工作者：** 必需子技能：使用 superpowers:subagent-driven-development（推荐）或 superpowers:executing-plans 逐任务实现此计划。步骤使用复选框（`- [ ]`）语法来跟踪进度。
 
@@ -13,7 +13,7 @@
 ## 文件结构
 
 ```
-/d/MineGameStats/
+/d/MySteamStats/
 ├── package.json
 ├── tsconfig.json
 ├── next.config.js
@@ -182,7 +182,7 @@ npx prisma generate
 
 ```bash
 # .env.example
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/minegamestats"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mysteamstats"
 STEAM_API_KEY=""  # 可选，Steam Web API Key（不填则使用公开数据爬取）
 DEEPSEEK_API_KEY="your-deepseek-api-key"
 DEEPSEEK_BASE_URL="https://api.deepseek.com"
@@ -202,7 +202,7 @@ import Header from "@/components/Header";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MineGameStats - Steam 游戏数据分析",
+  title: "MySteamStats - Steam 游戏数据分析",
   description: "连接你的 Steam 账号，深度分析你的游戏人生",
 };
 
@@ -289,7 +289,7 @@ import { redirect } from "next/navigation";
 
 const SESSION_OPTIONS = {
   password: process.env.SESSION_SECRET!,
-  cookieName: "minegamestats_session",
+  cookieName: "mysteamstats_session",
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
@@ -456,7 +456,7 @@ export default function Header() {
   return (
     <header className="border-b border-gray-800 px-6 py-3 flex items-center justify-between">
       <Link href="/" className="text-xl font-bold text-orange-500">
-        MineGameStats
+        MySteamStats
       </Link>
       <nav className="flex items-center gap-6">
         <Link href="/dashboard" className={pathname === "/dashboard" ? "text-orange-500" : "text-gray-400 hover:text-white"}>
@@ -1767,7 +1767,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=postgresql://postgres:${DB_PASSWORD:-postgres}@db:5432/minegamestats
+      - DATABASE_URL=postgresql://postgres:${DB_PASSWORD:-postgres}@db:5432/mysteamstats
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
       - DEEPSEEK_BASE_URL=${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
       - STEAM_API_KEY=${STEAM_API_KEY:-}
@@ -1783,7 +1783,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
-      - POSTGRES_DB=minegamestats
+      - POSTGRES_DB=mysteamstats
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -1800,7 +1800,7 @@ volumes:
 - [ ] **步骤 4：编写 README.md**
 
 ```markdown
-# MineGameStats
+# MySteamStats
 
 连接 Steam 账号，深度分析你的游戏人生。
 
@@ -1824,8 +1824,8 @@ volumes:
 
 1. 克隆项目：
 ```bash
-git clone https://github.com/<your-org>/mine-game-stats.git
-cd mine-game-stats
+git clone https://github.com/<your-org>/mysteamstats.git
+cd mysteamstats
 ```
 
 2. 配置环境变量：

@@ -1,8 +1,8 @@
-# MineGameStats 产品设计规格
+# MySteamStats 产品设计规格
 
 ## 概述
 
-MineGameStats 是一个公开的 Steam 游戏数据分析平台。用户通过 Steam OpenID 登录，系统拉取其公开游戏库数据，提供星系视图可视化、AI 性格锐评、评测风格分析和智能游戏推荐。
+MySteamStats 是一个公开的 Steam 游戏数据分析平台。用户通过 Steam OpenID 登录，系统拉取其公开游戏库数据，提供星系视图可视化、AI 性格锐评、评测风格分析和智能游戏推荐。
 
 **开源策略**: 代码在 GitHub 开源，Docker Compose 一键部署。作者租用服务器运营一个月后停止，后续用户可自行本地搭建。
 
