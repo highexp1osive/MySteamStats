@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @default(uuid())
+  steamId      String       @unique
+  displayName  String
+  avatarUrl    String
+  profileUrl   String
+  lastSyncAt   DateTime?
+  games        UserGame[]
+  reviews      UserReview[]
+  analyses     AIAnalysis[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Game {
+  id          String     @id @default(uuid())
+  steamAppId  Int        @unique
+  name        String
+  coverUrl    String
+  headerUrl   String
+  genres      String[]
+  userGames   UserGame[]
+  reviews     UserReview[]
+}
+
+model UserGame {
+  id              String    @id @default(uuid())
+  userId          String
+  gameId          String
+  playtimeMinutes Int
+  playtime2Weeks  Int
+  lastPlayedAt    DateTime?
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game            Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+}
+
+model UserReview {
+  id             String   @id @default(uuid())
+  userId         String
+  gameId         String
+  content        String
+  isRecommended  Boolean
+  steamReviewId  String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game           Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+}
+
+model AIAnalysis {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  content     Json
+  generatedAt DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+}
